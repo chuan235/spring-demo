@@ -1,0 +1,27 @@
+server:
+  port: 3001
+# 配置单节点的eureka
+eureka:
+  instance:
+    hostname: eureka3001.top  # 实例名称
+  server:
+    enable-self-preservation: true # 关闭自我保护机制,打开自我保护机制就不会出现警告
+    eviction-interval-timer-in-ms: 6000 # 设置清理间隔时间(单位是毫秒：默认为60*1000)
+  client:
+    register-with-eureka: false # 当前单机模式，不将自己作为一个客户端注册到自己身上
+    fetch-registry: false # 这里配置不需要从服务端获取注册信息，集群需要开启
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka
+
+
+# 配置eureka集群
+#eureka:
+#  instance:
+#    hostname: eureka3001.top # 实例名称
+#  server:
+#    eviction-interval-timer-in-ms: 6000 # 设置清理间隔时间(单位是毫秒：默认为60*1000)
+#  client:
+#    fetch-registry: true
+#    service-url:
+#      defaultZone: http://eureka3002.top:3002/eureka,http://eureka3003.top:3003/eureka
+

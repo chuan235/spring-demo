@@ -1,0 +1,11 @@
+#spring:
+#  cloud:
+#    config:
+#      name: cloud-config1 #这里配置读取的配置文件名 对应获取规则的{application}
+#      profile: dev
+#      label: master #配置分支
+#      #uri: http://localhost:3101/ #配置中心 config-server的url
+#      # 当config已集群的方式存在eureka中时，这里需要配置serviceId
+#      discovery:
+#        service-id: cloud-config
+#        enabled: true

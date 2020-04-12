@@ -1,0 +1,9 @@
+server:
+  port: 3201
+# 配置自定义服务器，2.7.x以后便不支持自定义服务器，推荐使用官方的jar包或者docker
+management:
+  metrics:
+    web:
+      server:
+        auto-time-requests: false
+# 官网：https://zipkin.io/

@@ -1,0 +1,12 @@
+server:
+  port: 3003
+# 配置eureka集群
+eureka:
+  instance:
+    hostname: eureka3003.top # 实例名称
+  server:
+    eviction-interval-timer-in-ms: 6000 # 设置清理间隔时间(单位是毫秒：默认为60*1000)
+  client:
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka3002.top:3002/eureka,http://eureka3001.top:3001/eureka

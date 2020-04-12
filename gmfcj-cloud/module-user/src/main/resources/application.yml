@@ -1,0 +1,34 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: module-user
+    #    name: cloud-config1  #这里的name就对应了springcloud-config 配置中心的名称
+  zipkin:
+    base-url: http://localhost:3201 # 配置zipkin 服务的地址
+  sleuth:
+    sampler:
+      probability: 1 # 设置采样频率 默认为0.1，就是采集请求中的10%，设置为1表示每一个请求都会采集
+management:
+  endpoints:
+    shutdown:
+      enabled: true
+    web:
+      exposure:
+        include: "*"
+# 进行服务注册
+eureka:
+  client:
+    service-url:
+      # ,http://eureka3002.top:3002/eureka,http://eureka3003.top:3003/eureka
+      defaultZone: http://eureka3001.top:3001/eureka  # eureka服务端提供的注册地址
+  instance:
+    instance-id: module-user # 注册到eureka的应用程序的唯一标识
+    prefer-ip-address: true  # 是否显示标识
+    lease-renewal-interval-in-seconds: 5  # eureka客户需要多长时间发送心跳给eureka服务器，表明它仍然活着,默认为30 秒 (与下面配置的单位都是秒)
+    lease-expiration-duration-in-seconds: 10 # eureka服务器在接受到应用实例的最后一次心跳后，需要等待多久才能将实例删除，在这个时间段内没有接受到心跳说明eureka就可以移除这个实例了
+    # status-page-url: https://${spring.application.name}:${server.port}/actuator/env
+    # health-check-url: https://${spring.application.name}:${server.port}/actuator/health
+feign:
+  hystrix:
+    enabled: true # 开启feign对hystrix的支持

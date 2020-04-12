@@ -1,0 +1,87 @@
+eureka  3001
+        3002
+        3003
+dashbord 3003
+config-server 3101
+zipkin-server 3201
+
+zuul    5001
+
+
+power   6001
+power-copy  6002
+order   6003
+order-copy   6004
+user 9001
+
+
+eureka红色提示：THE SELF PRESERVATION MODE IS TURNED OFF.THIS MAY NOT PROTECT INSTANCE EXPIRY IN CASE OF NETWORK/OTHER PROBLEMS.
+是因为没有开始保护机制，只需在eureka的服务端配置
+enable-self-preservation: true 就不会出现这个红色提示了
+
+sleuth数据的持久化方案：
+https://cloud.spring.io/spring-cloud-static/Finchley.SR4/single/spring-cloud.html#_sleuth_with_zipkin_over_rabbitmq_or_kafka
+
+
+protected void initStrategies(ApplicationContext context) {
+    this.initMultipartResolver(context);
+    this.initLocaleResolver(context);
+    this.initThemeResolver(context);// 前端主体样式，利用spring来做
+    this.initHandlerMappings(context);
+    this.initHandlerAdapters(context);
+    this.initHandlerExceptionResolvers(context);
+    this.initRequestToViewNameTranslator(context);
+    this.initViewResolvers(context);// 视图解析器
+    this.initFlashMapManager(context);// 重定向数据管理器
+}
+广播器 EventPublishingRunListener中的 initialMulticaster
+1、广播事件，核心程序
+    Collection<ApplicationListener<?>> listenerList = this.getApplicationListeners(event, type);
+    这个getApplicationListeners(event,type)做了两件事，传递的参数是广播的事件以及事件的类型
+    意思就是告诉所有的监听器现在有一个type类型的event事件，并且问这些监听器感兴趣吗？
+2、关键点，spring如何拿到所有的监听器？又是怎么判断监听器是否对事件感兴趣？
+    (1) 获取监听器
+    (2) 确定监听器是否监听了发布的事件，spring中有两个方法可以判断
+    supportsEventType(eventType)
+    smartListener.supportsSourceType(sourceType)
+    这两个方法通过传入的事件类型或者事件源会返回一个boolean值，任意一个返回false，就表示这个监听器对这个广播的事件不感兴趣
+    如果感兴趣会被add到一个list中，在后续的代码中依次执行方法调用
+
+    在监听器回调的时候，还是可以进行事件类型判断的，如果对事件类型不感兴趣，则不执行回调方法
+3、获取到所有对这个事件感兴趣的监听器，遍历执行其onAppplicationEvent方法
+    这里代码会传入一个ApplicationStartingEvent事件过去
+    那么在springboot中默认定义的11个监听器中，有哪些监听器对这个事件感兴趣呢？
+    可以查看监听器的源码，看这些监听器都对那些事件感兴趣，总共有4个监听器对这个 ApplicationStartingEvent 感兴趣
+    LoggingApplicationListener
+    BackgroundPreinitializer
+    DelegationApplicationListener
+    LiquibaseServiceLocatorApplicationListener
+4、initialMulticaster可以看到是 SimpleApplicationEventMulticaster 类型的对象，主要有两个作用
+    广播事件
+    执行listener的onApplicationEvent方法
+
+```java
+    synchronized(this.retrievalMutex) {
+        // 获取所有的监听器
+        listeners = new LinkedHashSet(this.defaultRetriever.applicationListeners);
+        listenerBeans = new LinkedHashSet(this.defaultRetriever.applicationListenerBeans);
+    }
+    Iterator var14 = listeners.iterator();
+    // 遍历监听器，看监听器对eventType 感不感兴趣
+    while(var14.hasNext()) {
+        ApplicationListener<?> listener = (ApplicationListener)var14.next();
+        // supportsEvent方法
+        if (this.supportsEvent(listener, eventType, sourceType)) {
+            // 对事件感兴趣
+            if (retriever != null) {
+                retriever.applicationListeners.add(listener);
+            }
+            allListeners.add(listener);
+        }
+    }
+```
+springboot
+    handler.handlerReturnValue(returnValue,returnType)
+    returnValueHandlers  => 15个 HandlerMethodReturnValueHandlerComposite
+springboot的handlerMappings 5个
+    这些handlerMappings是什么时候放入容器中的
