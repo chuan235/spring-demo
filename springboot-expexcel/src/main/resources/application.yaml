@@ -1,0 +1,41 @@
+server:
+  servlet:
+    context-path: /
+# 配置HTTP编码和静态资源
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      force: false
+  mvc:
+    static-path-pattern: /static/**
+  resources:
+    static-locations: classpath:/static,classpath:/public,classpath:/resources,classpath:/META-INF/resources
+    chain:
+      strategy:
+        content:
+          enabled: true
+          paths: /**
+  thymeleaf:
+    encoding: UTF-8
+    mode: HTML
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+# 配置mysql与连接池
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/studb?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: password
+    hikari:
+      pool-name: hikariPool
+      auto-commit: true
+      minimum-idle: 5
+      maximum-pool-size: 15
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+mybatis:
+  config-location: classpath:mybatis.xml

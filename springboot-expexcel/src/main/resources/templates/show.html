@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>数据展示</title>
+    <style type="text/css">
+        #container{margin:30px;position: relative}
+        table {border-collapse:collapse;}
+        th,td{border: 1px solid black;}
+        #expExcel{
+            position: absolute;
+            right: 20px;
+            top: 30px;
+            width: 100px;
+            height: 30px;
+            background: #fff;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <table>
+        <thead>
+            <th>序号</th>
+            <th>教室名称</th>
+            <th>温度(摄氏度)</th>
+            <th>湿度(%RH)</th>
+            <th>PM2.5浓度(ug/m3)</th>
+            <th>CO2浓度(ppm)</th>
+            <th>TVOC浓度(ppb)</th>
+            <th>测量时间</th>
+        </thead>
+        <tbody>
+            <tr th:each="air,stat:${data}">
+                <td th:text="${air['airId']}"></td>
+                <td th:text="${air['className']}"></td>
+                <td th:text="${air['temperature']}"></td>
+                <td th:text="${air['humidity']}"></td>
+                <td th:text="${air['pm']}"></td>
+                <td th:text="${air['co2']}"></td>
+                <td th:text="${air['tvoc']}"></td>
+                <td th:text="${#dates.format(air['dataTime'],'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+        </tbody>
+        </table>
+        <button type="button" id="expExcel" value="导出Excel">导出Excel</button>
+    </div>
+    <script src="/static/jquery-1.8.3.min.js"></script>
+    <script>
+$("#expExcel").click(function () {
+
+    alert("下载数据");
+    // $.ajax({
+    //     type: "GET",
+    //     url: "/excel/download",
+    //     success: function(){
+    //         alert( "downLoad Success ");
+    //     }
+    // });
+
+});
+    </script>
+</body>
+</html>
