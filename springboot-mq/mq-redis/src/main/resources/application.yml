@@ -1,0 +1,14 @@
+spring:
+  redis:
+    database: 0
+    host: 192.168.222.129
+    # redis.conf -> requirepass
+    password:
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1ms
+        min-idle: 0
+      shutdown-timeout: 100ms

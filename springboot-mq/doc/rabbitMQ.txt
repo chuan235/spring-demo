@@ -1,0 +1,93 @@
+rabbitMQ user tags
+	management : 访问管理插件
+	policymaker: 访问管理插件，并且有权访问vhost的策略和参数
+	monitoring : 访问管理插件，查看所有连接通道和节点相关信息
+	administrator: 可以执行监视可以执行的所有操作，管理用户、vhost和权限，关闭其他用户的连接，以及管理所有vhost的策略和参数。
+
+Message
+	消息: 由消息头和消息体组成，消息体是不透明的，消息头是由一系列可选择的属性组成，这些属性包括 routing-key / priority / delivery-mode 等
+Publisher
+	消息的生产者: 也是一个向交换器发布消息的客户端应用程序
+Exchange
+	交换器： 用于接收生产者发送过来的消息，并将这些消息路由给服务器中的队列
+		direct(默认) 如果路由键(routing key)和Binding中的binding key 一致，交换机就会将数据发送到对应的队列中。完全匹配
+		fanout 会将消息发送到所有绑定的队列上，fanout交换机转发消息是最快的
+		topic 通过routing key 和 binding key的模式匹配，将消息发送到匹配成功的队列中。 #匹配0个或者多个单词，*匹配一个单词
+		headers 和 direct 交换机一致，只是匹配的是header而不是路由键
+Queue
+	消息队列: 用来保存消息直到发送给消费者。一个消息可投入一个或者多个队列，消息一直在队列里面，等待有消费者来连接消息队列取走消息
+Binding
+	绑定: 用于消息队列和交换器之间的关联。就是基于路由键将交换器和消息队列通过路由规则绑定起来，Exchange 和 Queue 之间是多对多的关系
+Connection
+	网络连接: 比如一个TCP连接
+Channel
+	信道: 信道是多路复用连接中的一条独立的双向数据流通道。信道是建立在真实TCP连接内的虚拟连接，AMQP的命令都是通过信道来发送的，包括发送、接收、订阅。对于操作系统来说建立和销毁TCP都是昂贵的开销，所以引入信道的概念以复用一条TCP连接
+Consumer
+	消息的消费者
+Virtual Host
+	虚拟主机: 代表一批交换机、消息队列和相关对象。虚拟主机是共享相同的身份认证和加密环境的独立服务器域。每个vhost本质就是一个min版的RabbitMQ服务器，拥有自己的队列、交换机、绑定和权限机制。vhost是AMQP概念的基础，必须在连接时指定，RabbitMQ默认的vhost是 / 
+Broker
+	表示消息服务器实体
+
+运行机制
+	消息路由，生产者把消息发布到Exchange上，消息最终到达队列并被消费者接收，而Binding决定交换器的消息应该发送到哪一个队列
+
+RabbitMQ的序列化机制
+	RabbitMQ的序列化是指Message的body属性，就是真正需要发送的内容，RabbitMQ抽象出一个MessageConvert接口处理消息的序列化
+	默认使用 SimpleMessageConverter ，常用的还有 Jackson2JsonMessageConverter
+	当调用了rabbitmqTemplate.convertAndSend方法的时候，会使用MessageConvert进行消息的序列化
+SimpleMessageConverter
+	当body是byte数组是，不进行序列化；
+	当body是String时，则转为字节数组
+	当body时对象时，使用jdk的序列化将消息转为字节数组，含class类名、类相应方法等信息，因此性能较差
+当发送的数据量比较大的时候，可以考虑使用 Jackson2JsonMessageConverter 类提升性能
+
+如果需要使用自定义的 MessageConvert ，则需要在 RabbitListenerContainerFactory 实例中去设置（spring默认的实现是 SimpleRabbitListenerContainerFactory ）
+消息的contentType属性表示了消息的body数据以什么数据格式存储
+
+接收消息除了使用 Message 对象接收消息（包含消息属性等信息）之外，还可直接使用对应类型接收消息 body 内容，但若方法参数类型不正确会抛异常
+
+	application/octet-stream	二进制字节数组存储，使用byte[]
+	application/x-java-serialized-object java对象序列化格式存储
+	text/plain					文本数据类型存储，使用String
+	application/json 			JSON格式，使用Object、相应类型
+
+使用 @Payload 和 @Headers 注解注入消息中的 body 与 headers 信息
+public void process1(@Payload String body, @Headers Map<String,Object> headers){...}    获取整个header
+public void process2(@Payload String body, @Header String token){...}					获取单个header
+
+@RabbitListener和@RabbitHandler
+	@RabbitListener 标注在类上表示当有收到消息的时候，就交给 @RabbitHandler 的方法去处理，具体方法的选择根据方法参数去匹配
+
+自定义 RabbitListenerContainerFactory
+
+转换消息: AbstractAdaptableMessageListener#extractMessage -> SimpleMessageConverter#fromMessage
+
+
+AMQP（Advanced message queuing protocol）是一种二进制链接协议（binary wire-leve protocol），AMQP不从API层去限定，而是直接定义网络交换的数据格式。
+
+AMPQ 与  JMS
+1、通信平台的区别
+	AMQP允许多种消息协议进行通信，比如ruby的storm和java的jms都可以在AMQP上通信
+	JMS:只允许基于JAVA实现的消息平台的之间进行通信
+2、通信机制不同
+	JMS消息生产者和消息消费者必须知道对方的Queue
+	消息生产者和消息消费者无须知道对方的Queue,消息生产者将Exchange通过Route key和任意Queue绑定。消息消费者通过Route key从任意Queue中获取Exchange
+3、消息传输机制不同
+	JMS支持点对点（point-to-point，简称PTP）、发布/订阅（publish/subscribe，简称pub/sub）
+	AMQP根据headers匹配，根据路由键匹配、一个exchange绑定多个queue，多个exchange绑定到一个queue
+4、消息传输模型不同
+	JMS -> P2P/Pub-Sub
+	AMQP -> direct/fanout/topic/headers/system
+5、JMS支持多种消息类型，AMQP统一转为 byte[] 发送
+	TextMessage/MapMessage/BytesMessage/StreamMessage/ObjectMessage/Message(只有消息头和属性)
+
+总结：JMS定义了JAVA API层面的标准，在java体系中，多个client均可以通过JMS进行交互，不需要应用修改代码，但是其对跨平台的支持较差
+	AMQP定义了wrie-leve层的协议标准，天然具有跨平台、跨语言的特性
+
+
+
+
+
+
+

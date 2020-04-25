@@ -1,0 +1,14 @@
+spring:
+  rabbitmq:
+    host: 192.168.222.129
+    port: 5672
+    username: root
+    password: root
+    # 确认消息正常达到exchange
+    publisher-confirms: true
+    # 路由找不到队列等错误触发
+    publisher-returns: true
+    connection-timeout: 30000
+      # 设置为 true 后,消费者在消息没有被路由到合适队列情况下会被return监听，而不会自动删除
+    template:
+      mandatory: true
