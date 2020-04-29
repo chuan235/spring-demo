@@ -1,0 +1,5 @@
+package ${package.Service};
+
+public interface ${table.serviceName} {
+
+}

@@ -1,0 +1,30 @@
+package ${package.ServiceImpl};
+
+import ${package.Entity}.${entity};
+import ${package.Mapper}.${table.mapperName};
+import ${package.Service}.${table.serviceName};
+import ${superServiceImplClassPackage};
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+/**
+ * $!{table.comment}
+ * @author ${author}
+ * @since ${date}
+ */
+@Service
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${entity}> implements ${table.serviceName} {
+
+    @Autowired
+    private ${table.mapperName} ${table.entityPath}Mapper;
+
+    @Autowired
+    private ${table.serviceName} ${table.entityPath}Service;
+
+    @Autowired
+    public void setBaseMapper(){
+            super.setBaseMapper(${table.entityPath}Mapper);
+    }
+}

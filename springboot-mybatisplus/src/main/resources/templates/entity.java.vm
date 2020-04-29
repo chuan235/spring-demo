@@ -1,0 +1,15 @@
+package ${package.Entity};
+
+import java.util.List;
+import java.math.BigDecimal;
+
+
+/**
+ * ${table.name} ${table.comment}
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+public class ${entity} extends ${superEntityClass}{
+
+}
