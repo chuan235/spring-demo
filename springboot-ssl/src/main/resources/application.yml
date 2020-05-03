@@ -1,0 +1,16 @@
+server:
+  port: 8081
+  tomcat:
+    accept-count: 3000
+    max-threads: 800
+    min-spare-threads: 20
+    max-connections: 30000
+  servlet:
+    context-path: /ssl
+  ssl:
+    # key的路径
+    key-alias: tomcat
+    key-store: classpath:tomcat.key
+    key-store-type: JKS
+    # 配置密码 生成证书的时候输入的密码
+    key-store-password: password
