@@ -1,0 +1,3 @@
+#server:
+#    servlet:t-path:/hello
+#    port: 8090
