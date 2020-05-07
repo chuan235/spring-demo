@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: provider # 配置应用名称
+
+# 配置服务的版本
+demo:
+  service:
+    version: 1.1.1
+
+dubbo:
+  application:
+    name: dubbo-provider
+  protocol:
+    name: dubbo
+    port: 20880
+  registry:
+    address: zookeeper://192.168.222.128:12181
+  provider:
+    timeout: 1000
+  scan:
+    base-packages: com.gc.provider.service
