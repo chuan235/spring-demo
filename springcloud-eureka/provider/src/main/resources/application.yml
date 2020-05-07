@@ -1,0 +1,15 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: provider8001
+
+eureka:
+  instance:
+    prefer-ip-address: true # 优先使用IP地址方式进行注册服务
+    instance-id: ${spring.application.name}:${server.port}
+    # hostname: provider8002  使用主机名称进行注册，配置hosts映射
+
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka # 服务注册的地址，如果需要注册多个服务器，用逗号隔开
