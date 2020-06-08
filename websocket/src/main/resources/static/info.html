@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>info</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+</head>
+<body>
+<h3>back is running....</h3>
+</body>
+<script src="/jquery.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="/webjars/sockjs-client/1.0.2/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+<script src="app.js"></script>
+<script>
+    $(function () {
+        console.log("展示运行中的单车信息");
+        $.get('/info', function (result) {
+            console.log("展示运行中的单车信息");
+        });
+        // 订阅消息
+        //连接ws
+        var socket = new SockJS('/xihua');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            //订阅
+            stompClient.subscribe('/stop/back/123', function (data) {
+                console.log("data=" + data);
+                processData(data.body);
+            });
+        });
+    });
+
+    function processData(data) {
+        if(data == 'error'){
+            alert("关锁失败");
+        }else if(data == 'success'){
+            alert("关锁成功");
+        }
+    }
+</script>
+</html>
