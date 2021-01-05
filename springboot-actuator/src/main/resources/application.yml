@@ -1,0 +1,29 @@
+server:
+  port: 8081
+spring:
+  profiles:
+    active: dev
+  security:
+    user:
+      name: root
+      password: password
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      enabled: true
+    prometheus:
+      enabled: true
+    shutdown:
+      enabled: true
+logging:
+  file:
+    name: actuator.log
+    path: d:/share/log
