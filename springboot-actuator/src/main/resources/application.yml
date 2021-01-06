@@ -7,8 +7,13 @@ spring:
     user:
       name: root
       password: password
+  application:
+    name: springboot
 
 management:
+  metrics:
+    tags:
+      aplication: ${spring.application.name}
   endpoints:
     web:
       base-path: /actuator
