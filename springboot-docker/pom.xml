@@ -61,7 +61,7 @@
 			</plugin>
 
 			<!-- Docker maven plugin -->
-			<plugin>
+			<!--<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>1.2.0</version>
@@ -76,6 +76,48 @@
 						</resource>
 					</resources>
 				</configuration>
+			</plugin>-->
+
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<configuration>
+					<!--配置基本镜像-->
+					<from>
+						<image>harbor.gc.com/test/openjdk:8u131-jre-alpine</image>
+						<auth>
+							<username>admin</username>
+							<password>Harbor12345</password>
+						</auth>
+					</from>
+					<!--配置最终推送的地址，仓库名，镜像名-->
+					<to>
+						<image>harbor.gc.com/test/springboot-docker:${project.version}</image>
+						<auth>
+							<username>admin</username>
+							<password>Harbor12345</password>
+						</auth>
+					</to>
+					<!--<container>
+						<jvmFlags>
+							<jvmFlag></jvmFlag>
+						</jvmFlags>
+						<ports>
+							<port>8080</port>
+						</ports>
+					</container>-->
+					<allowInsecureRegistries>true</allowInsecureRegistries>
+				</configuration>
+				<!--绑定到maven lifecicle-->
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 

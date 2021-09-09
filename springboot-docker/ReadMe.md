@@ -64,15 +64,30 @@
             <configuration>
                 <!--配置基本镜像-->
                 <from>
-                    <image>openjdk:8-jdk-alpine</image>
+                    <image>harbor.gc.com/test/openjdk:8u131-jre-alpine</image>
+                    <auth>
+                        <username>admin</username>
+                        <password>Harbor12345</password>
+                    </auth>
                 </from>
                 <!--配置最终推送的地址，仓库名，镜像名-->
                 <to>
-                    <image>registry.hub.docker.com/maoduntt/test</image>
+                    <image>harbor.gc.com/test/springboot-docker:${project.version}</image>
+                    <auth>
+                        <username>admin</username>
+                        <password>Harbor12345</password>
+                    </auth>
                 </to>
+                <!--<container>
+                    <jvmFlags>
+                        <jvmFlag></jvmFlag>
+                    </jvmFlags>
+                    <ports>
+                        <port>8080</port>
+                    </ports>
+                </container>-->
+                <allowInsecureRegistries>true</allowInsecureRegistries>
             </configuration>
-
-
             <!--绑定到maven lifecicle-->
             <executions>
                 <execution>
@@ -85,12 +100,24 @@
         </plugin>
     配置maven docker hub账户和密码,在maven settings.xml中添加
         <server>
-          <id>registry.hub.docker.com或者私服IP</id>
+          <id>harbor.gc.com</id>
           <username>用户名</username>
           <password>密码</password>
         </server>
     在idea maven插件中点击或者maven命令 mvn compile jib:buildTar
-        可以看到推送远程成功，Jib不需要写Dockerfile只需要你在插件中定义构建类型，所以使用时请多参考github的文档.
-        都不是特别难,看自己喜好选择一种方式，有问题请留言。
-        觉得这篇文章对您有帮助，麻烦点个赞呗.
+
+    mvn clean package -DskipTests jib:build -DsendCredentialsOverHttp=true
+
+
+
+
+
+
+
+
+
+
+
+
+
 
