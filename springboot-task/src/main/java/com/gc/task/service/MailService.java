@@ -12,6 +12,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 
+/**
+ * @author gouchuan
+ */
 @Service
 public class MailService {
 

@@ -1,0 +1,19 @@
+spring:
+  mail:
+    host: smtp.qq.com
+    username: 1595030095@qq.com
+    password: xxxxxxxxxxx#开启SMTP服务授权码
+    properties:
+      mail.smtp.ssl.enable: true
+
+mail:
+  fromMail:
+    addr: 1595030095@qq.com
+
+web:
+  pool:
+    core-size: 10
+    max-size: 20
+    queue-capacity: 100
+    keep-alive-seconds: 60
+    thread-prefix: web-executor-

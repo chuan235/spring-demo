@@ -1,15 +1,19 @@
 package com.gc.task.controller;
 
 import com.gc.task.service.AsyncService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author gouchuan
+ */
 @RestController
+@RequiredArgsConstructor
 public class AsyncController {
 
-    @Autowired
-    AsyncService asyncService;
+    private final AsyncService asyncService;
 
     @GetMapping("/hello")
     public String hello(){
