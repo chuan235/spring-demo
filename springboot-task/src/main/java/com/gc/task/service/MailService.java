@@ -26,9 +26,9 @@ public class MailService {
 
     /**
      * 发送文本邮件
-     * @param to
-     * @param subject
-     * @param content
+     * @param to 目标邮箱
+     * @param subject 邮件主题
+     * @param content 邮件内容
      */
     public void sendSimpleMail(String to, String subject, String content) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -46,9 +46,9 @@ public class MailService {
 
     /**
      * 发送html的邮件
-     * @param to
-     * @param subject
-     * @param content
+     * @param to 目标邮箱
+     * @param subject 邮件主题
+     * @param content 邮件内容
      */
     public void sendHtmlMail(String to, String subject, String content) {
         MimeMessage message = mailSender.createMimeMessage();
@@ -62,10 +62,10 @@ public class MailService {
 
     /**
      * 发送带附件的邮件
-     * @param to
-     * @param subject
-     * @param content
-     * @param filePath
+     * @param to 目标邮箱
+     * @param subject 邮件主题
+     * @param content 邮件内容
+     * @param filePath 附件
      */
     public void sendAttachmentsMail(String to, String subject, String content, String filePath){
         MimeMessage message = mailSender.createMimeMessage();
@@ -75,7 +75,7 @@ public class MailService {
             FileSystemResource file = new FileSystemResource(new File(filePath));
             String fileName = filePath.substring(filePath.lastIndexOf(File.separator));
             helper.addAttachment(fileName, file);
-            // helper.addAttachment("test"+fileName, file);
+            /* helper.addAttachment("test"+fileName, file); */
             mailSender.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -83,11 +83,11 @@ public class MailService {
     }
     /**
      * 发送正文中有静态资源（图片）的邮件
-     * @param to
-     * @param subject
-     * @param content
-     * @param rscPath
-     * @param rscId
+     * @param to 目标邮箱
+     * @param subject 邮件主题
+     * @param content 邮件内容
+     * @param rscPath 静态资源路径
+     * @param rscId contentId
      */
     public void sendInlineResourceMail(String to, String subject, String content, String rscPath, String rscId){
         MimeMessage message = mailSender.createMimeMessage();

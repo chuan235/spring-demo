@@ -5,15 +5,15 @@ import org.springframework.stereotype.Service;
 
 /**
  * Springboot的异步任务
+ * @author gouchuan
  */
 @Service
 @Async
 public class AsyncService {
 
     /**
-     * @Async 表示这一个方式是异步方法
+     * //@Async 表示这一个方式是异步方法
      */
-    //@Async
     public void hello(){
         try {
             Thread.sleep(5000);
